@@ -27,6 +27,7 @@ import g6.tp.despensa.entities.Client;
 import g6.tp.despensa.entities.Product;
 import g6.tp.despensa.entities.Sale;
 import g6.tp.despensa.services.ClientService;
+import g6.tp.despensa.services.ProductService;
 import g6.tp.despensa.services.SaleService;
 
 @RestController
@@ -39,6 +40,9 @@ public class SaleController {
 
 	@Autowired
 	private ClientService clientService;
+
+	@Autowired
+	private ProductService productService;
 
 	@GetMapping("")
 	public List<Sale> getAll() {
@@ -114,8 +118,22 @@ public class SaleController {
 
 	// 4) Genere un reporte con las ventas por día
 	@GetMapping("/dailyReport")
-	public Set<Sale> getDailyReport() {
-		return saleService.getSalesFrom(Date.valueOf(LocalDate.now()));
+	public ResponseEntity<Map<Date, Set<Sale>>> getDailyReport() {
+		List<Sale> sales = saleService.getSales();
+		List<Date> dates = new ArrayList<>();
+		Map<Date, Set<Sale>> responseMap = new HashMap<>();
+		if (sales.isEmpty()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		for (Sale s : sales) {
+			if (!dates.contains(s.getDate())) {
+				dates.add(s.getDate());
+			}
+		}
+		for (Date d : dates) {
+			responseMap.put(d, saleService.getSalesFrom(d));
+		}
+		return new ResponseEntity<>(responseMap, HttpStatus.OK);
 	}
 
 	// 5) Implemente una consulta para saber cúal fue el producto más vendido
@@ -137,7 +155,7 @@ public class SaleController {
 			}
 		}
 		int maxKey = this.getMaxKey(countMap);
-		responseMap.put("Id_product", String.valueOf(maxKey));
+		responseMap.put("product_name", this.productService.getProductById(maxKey).get().getName());
 		responseMap.put("total", String.valueOf(countMap.get(maxKey)));
 		return new ResponseEntity<>(responseMap, HttpStatus.OK);
 	}
