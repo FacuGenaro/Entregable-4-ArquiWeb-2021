@@ -10,8 +10,6 @@ import g6.tp.despensa.entities.Sale;
 
 public interface SaleRepository extends JpaRepository<Sale, Integer> {
 
-	// Probar BETWEEN para ver si se puede hacer una bÃºsqueda en un rango (de una
-	// semana por ejemplo).
 	@Query("SELECT s FROM Sale s WHERE s.date=:date")
 	Set<Sale> getSalesFrom(Date date);
 

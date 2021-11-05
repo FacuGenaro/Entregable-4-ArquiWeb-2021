@@ -2,11 +2,10 @@ package g6.tp.despensa.filler;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalLong;
 import java.util.Random;
-import java.util.Set;
 import java.util.stream.IntStream;
 
 import org.springframework.boot.CommandLineRunner;
@@ -18,13 +17,13 @@ import g6.tp.despensa.entities.Product;
 import g6.tp.despensa.entities.Sale;
 import g6.tp.despensa.repositories.ClientRepository;
 import g6.tp.despensa.repositories.ProductRepository;
-import g6.tp.despensa.repositories.SaleRepository;
+import g6.tp.despensa.services.SaleService;
 
 @Configuration
 public class DbFiller {
 
 	@Bean
-	public CommandLineRunner initDb(ClientRepository client, ProductRepository product, SaleRepository sale) {
+	public CommandLineRunner initDb(ClientRepository client, ProductRepository product, SaleService sale) {
 		return args -> {
 			IntStream.range(0, 10).forEach((i) -> {
 				Client c = new Client("Cliente " + i);
@@ -36,7 +35,7 @@ public class DbFiller {
 			List<Product> pList = product.findAll();
 
 			IntStream.range(0, 5).forEach((i) -> {
-				Set<Product> pSet = new HashSet<>();
+				List<Product> pSet = new ArrayList<>();
 
 				Random r = new Random();
 
@@ -50,7 +49,7 @@ public class DbFiller {
 				OptionalLong randomDate = r.longs(yesterday, today + 1).findFirst();
 
 				Sale s = new Sale(c, pSet, Date.valueOf(LocalDate.ofEpochDay(randomDate.getAsLong())));
-				sale.save(s);
+				sale.addSale(s);
 			});
 		};
 	}

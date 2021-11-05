@@ -1,7 +1,7 @@
 package g6.tp.despensa.entities;
 
 import java.sql.Date;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,14 +25,14 @@ public class Sale {
 
 	@ManyToMany
 	@JoinColumn
-	private Set<Product> products;
+	private List<Product> products;
 
 
 	public Sale() {
 		super();
 	}
 
-	public Sale(Client client, Set<Product> products, Date date) {
+	public Sale(Client client, List<Product> products, Date date) {
 		super();
 		this.client = client;
 		this.products = products;
@@ -47,11 +47,11 @@ public class Sale {
 		this.client = client;
 	}
 
-	public Set<Product> getProducts() {
+	public List<Product> getProducts() {
 		return products;
 	}
 
-	public void setProducts(Set<Product> products) {
+	public void setProducts(List<Product> products) {
 		this.products = products;
 	}
 
