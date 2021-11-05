@@ -78,8 +78,10 @@ public class SaleController {
 		if (!saleDb.isPresent()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		this.saleService.updateSale(saleDb.get(), s);
-		return new ResponseEntity<>(HttpStatus.OK);
+		if (this.saleService.updateSale(saleDb.get(), s)) {
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 	}
 
 	// 3) Genere un reporte donde se indiquen los clientes y el monto total de sus

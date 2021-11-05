@@ -68,11 +68,11 @@ public class SaleService {
 	}
 
 	@Transactional
-	public void updateSale(Sale sDb, Sale s) {
+	public boolean updateSale(Sale sDb, Sale s) {
 		sDb.setClient(s.getClient());
 		sDb.setDate(s.getDate());
 		sDb.setProducts(s.getProducts());
-		this.addSale(sDb);
+		return this.addSale(sDb);
 	}
 
 	public Map<String, String> getMostSold() {
