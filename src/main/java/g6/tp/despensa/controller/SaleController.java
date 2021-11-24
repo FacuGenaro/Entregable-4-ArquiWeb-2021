@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 import g6.tp.despensa.entities.Client;
 import g6.tp.despensa.entities.Product;
 import g6.tp.despensa.entities.Sale;
+import g6.tp.despensa.model.ClientReportItem;
+import g6.tp.despensa.model.MostSold;
 import g6.tp.despensa.services.ClientService;
 import g6.tp.despensa.services.SaleService;
 
@@ -87,12 +89,12 @@ public class SaleController {
 	// 3) Genere un reporte donde se indiquen los clientes y el monto total de sus
 	// compras
 	@GetMapping("/clientReport")
-	public ResponseEntity<List<Map<String, String>>> getByClient() {
+	public ResponseEntity<List<ClientReportItem>> getClientReport() {
 		List<Client> c = clientService.getClients();
 		if (c.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
-		List<Map<String, String>> responseList = this.saleService.getClientReport(c);
+		List<ClientReportItem> responseList = this.saleService.getClientReport(c);
 		return new ResponseEntity<>(responseList, HttpStatus.OK);
 	}
 
@@ -105,9 +107,9 @@ public class SaleController {
 
 	// 5) Implemente una consulta para saber cúal fue el producto más vendido
 	@GetMapping("/mostSold")
-	public ResponseEntity<Map<String, String>> getMostSold() {
-		Map<String, String> responseMap = saleService.getMostSold();
-		return new ResponseEntity<>(responseMap, HttpStatus.OK);
+	public ResponseEntity<MostSold> getMostSold() {
+		MostSold mostSold = saleService.getMostSold();
+		return new ResponseEntity<>(mostSold, HttpStatus.OK);
 	}
 
 	@GetMapping("/byClient/{client_id}")

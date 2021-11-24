@@ -47,5 +47,10 @@ public class Product {
 	public String toString() {
 		return "Product [id=" + id + ", name=" + name + "]";
 	}
+	
+	@Override
+	public int hashCode() {
+		return Integer.hashCode(id);
+	}
 
 }

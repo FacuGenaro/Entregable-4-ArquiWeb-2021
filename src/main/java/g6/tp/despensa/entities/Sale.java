@@ -18,7 +18,7 @@ public class Sale {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 	private Date date;
-	
+
 	@ManyToOne
 	@JoinColumn
 	private Client client;
@@ -26,7 +26,6 @@ public class Sale {
 	@ManyToMany
 	@JoinColumn
 	private List<Product> products;
-
 
 	public Sale() {
 		super();
@@ -66,8 +65,27 @@ public class Sale {
 	public int getId() {
 		return id;
 	}
-	
-	public void setID (int id) {
+
+	public void setID(int id) {
 		this.id = id;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o == this) {
+			return true;
+		}
+
+		if (!(o instanceof Sale)) {
+			return false;
+		}
+
+		Sale oSale = (Sale) o;
+		return oSale.id == this.id;
+	}
+
+	@Override
+	public int hashCode() {
+		return Integer.hashCode(id);
 	}
 }

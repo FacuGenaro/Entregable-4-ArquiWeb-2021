@@ -51,7 +51,7 @@ public class ClientController {
 		}
 		return new ResponseEntity<Client>(c, HttpStatus.OK);
 	}
-	
+
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Client> delete(@PathVariable("id") int id) {
 		boolean ok = this.clientService.deleteById(id);
@@ -60,9 +60,9 @@ public class ClientController {
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+
 	@PutMapping("")
-	public ResponseEntity<Client> updateClient(@RequestBody Client c){
+	public ResponseEntity<Client> updateClient(@RequestBody Client c) {
 		Optional<Client> clientDb = this.clientService.getClientById(c.getId());
 		if (!clientDb.isPresent()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);

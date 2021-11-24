@@ -23,11 +23,10 @@ function initScript() {
     function getClientsReport() {
         fetch(url + item3Endpoint)
             .then(response => response.json())
-            .then(clients => {
+            .then(clientReportItems => {
                 content.innerHTML = "<h2>Reporte de Ventas por Cliente<h2/> <br/>";
-                for (const client of clients) {
-                    console.log(client);
-                    content.innerHTML += "Nombre: " + client.name + "<br/>" + "Monto Total: $" + client.total + "<hr/>";
+                for (const clientReportItem of clientReportItems) {
+                    content.innerHTML += "Nombre: " + clientReportItem.clientName + "<br/>" + "Monto Total: $" + clientReportItem.total + "<hr/>";
                 }
             })
             .catch(e => console.log(e))
@@ -42,7 +41,7 @@ function initScript() {
                 for (const day in dailyReportMap) {
                     for (let i = 0; i < dailyReportMap[day].length; i++) {
                         sales.push(dailyReportMap[day][i]);
-                    }    
+                    }
                 }
                 sales.forEach(sale => {
                     let productsNames = "";
@@ -50,10 +49,10 @@ function initScript() {
                         productsNames += product.name + "<br/>";
                     });
                     content.innerHTML += "Fecha: " + sale.date + "<br/>"
-                    + "Venta Nro: " + sale.id + "<br/>"
-                    + "Cliente: " + sale.client.name + "<br/>"
-                    + "Productos:<br/>"
-                    + productsNames + "<hr/>"
+                        + "Venta Nro: " + sale.id + "<br/>"
+                        + "Cliente: " + sale.client.name + "<br/>"
+                        + "Productos:<br/>"
+                        + productsNames + "<hr/>"
                 });
             })
             .catch(e => console.log(e))
@@ -62,11 +61,10 @@ function initScript() {
     function getMostSoldProduct() {
         fetch(url + item5Endpoint)
             .then(response => response.json())
-            .then(product => {
-                console.log(product);
+            .then(mostSold => {
                 content.innerHTML = "<h2>Producto Mas Vendido<h2/>" + "<br/>"
-                + "Nombre: " + product.product_name + "<br/>"
-                + "Total Recaudado: $" + product.total + "<hr/>";
+                    + "Nombre: " + mostSold.productName + "<br/>"
+                    + "Total Recaudado: $" + mostSold.quantity + "<hr/>";
             })
             .catch(e => console.log(e))
     }

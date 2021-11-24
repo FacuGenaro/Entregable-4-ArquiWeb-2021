@@ -15,5 +15,5 @@ public interface SaleRepository extends JpaRepository<Sale, Integer> {
 
 	@Query("SELECT s FROM Sale s WHERE s.client.id=:id")
 	Set<Sale> getSalesByClient(int id);
-	
+
 }

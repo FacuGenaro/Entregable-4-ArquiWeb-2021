@@ -3,8 +3,10 @@ package g6.tp.despensa.services;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 
@@ -15,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import g6.tp.despensa.entities.Client;
 import g6.tp.despensa.entities.Product;
 import g6.tp.despensa.entities.Sale;
+import g6.tp.despensa.model.ClientReportItem;
+import g6.tp.despensa.model.MostSold;
 import g6.tp.despensa.repositories.SaleRepository;
 
 @Service
@@ -22,9 +26,6 @@ public class SaleService {
 
 	@Autowired
 	private SaleRepository saleRepository;
-
-	@Autowired
-	private ProductService productService;
 
 	public Optional<Sale> getSaleById(int id) {
 		return this.saleRepository.findById(id);
@@ -75,64 +76,56 @@ public class SaleService {
 		return this.addSale(sDb);
 	}
 
-	public Map<String, String> getMostSold() {
-		Map<String, String> responseMap = new HashMap<>();
-		Map<Integer, Integer> countMap = new HashMap<>();
+	public MostSold getMostSold() {
+		Map<Product, Integer> countMap = new HashMap<>();
 		for (Sale s : this.getSales()) {
 			for (Product p : s.getProducts()) {
-				if (countMap.containsKey(p.getId())) {
-					countMap.put(p.getId(), countMap.get(p.getId()) + 1);
-				} else {
-					countMap.put(p.getId(), 1);
-				}
+				countMap.put(p, countMap.getOrDefault(p, 0) + 1);
 			}
 		}
-		int maxKey = this.getMaxKey(countMap);
-		responseMap.put("product_name", this.productService.getProductById(maxKey).get().getName());
-		responseMap.put("total", String.valueOf(countMap.get(maxKey)));
-		return responseMap;
+		Entry<Product, Integer> maxEntry = this.getMaxEntry(countMap);
+		MostSold result = new MostSold();
+		result.setProductName(maxEntry.getKey().getName());
+		result.setQuantity(maxEntry.getValue().intValue());
+		return result;
 	}
 
-	private int getMaxKey(Map<Integer, Integer> m) {
-		int maxKey = 0;
-		int maxValue = 0;
-		for (int i : m.keySet()) {
-			if (m.get(i) > maxValue) {
-				maxKey = i;
-				maxValue = m.get(i);
+	private Entry<Product, Integer> getMaxEntry(Map<Product, Integer> m) {
+		Entry<Product, Integer> maxEntry = null;
+		for (Entry<Product, Integer> i : m.entrySet()) {
+			if (maxEntry == null || i.getValue() > maxEntry.getValue()) {
+				maxEntry = i;
 			}
 		}
-		return maxKey;
+		return maxEntry;
 	}
 
-	public List<Map<String, String>> getClientReport(List<Client> c) {
-		List<Map<String, String>> responseList = new ArrayList<>();
+	public List<ClientReportItem> getClientReport(List<Client> c) {
+		List<ClientReportItem> responseList = new ArrayList<>();
 		for (Client client : c) {
 			Set<Sale> clientSales = this.getSalesByClient(client);
 			if (clientSales.isEmpty()) {
 				continue;
 			}
-			Map<String, String> responseMap = new HashMap<String, String>();
+			ClientReportItem clientReportItem = new ClientReportItem();
 			double d = 0;
 			for (Sale sale : clientSales) {
-				responseMap.put("name", sale.getClient().getName());
+				clientReportItem.setClientName(sale.getClient().getName());
 				for (Product p : sale.getProducts()) {
 					d += p.getPrice();
 				}
 			}
-			responseMap.put("total", String.valueOf(d));
-			responseList.add(responseMap);
+			clientReportItem.setTotal(d);
+			responseList.add(clientReportItem);
 		}
 		return responseList;
 	}
 
 	public Map<Date, Set<Sale>> getDailyReport() {
-		List<Date> dates = new ArrayList<>();
+		Set<Date> dates = new HashSet<>();
 		Map<Date, Set<Sale>> responseMap = new HashMap<>();
 		for (Sale s : this.getSales()) {
-			if (!dates.contains(s.getDate())) {
-				dates.add(s.getDate());
-			}
+			dates.add(s.getDate());
 		}
 		for (Date d : dates) {
 			responseMap.put(d, this.getSalesFrom(d));

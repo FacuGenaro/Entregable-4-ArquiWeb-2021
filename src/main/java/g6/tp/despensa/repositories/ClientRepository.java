@@ -6,5 +6,4 @@ import g6.tp.despensa.entities.Client;
 
 public interface ClientRepository extends JpaRepository<Client, Integer> {
 
-
 }

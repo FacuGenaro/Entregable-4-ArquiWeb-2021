@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import g6.tp.despensa.entities.Product;
 import g6.tp.despensa.services.ProductService;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/product")
@@ -28,12 +29,14 @@ public class ProductController {
 	@Autowired
 	private ProductService productService;
 
+	@ApiOperation(value = "Get all products", response = List.class)
 	@GetMapping("")
 	public List<Product> getAll() {
 		return this.productService.getProducts();
 	}
 
 	@GetMapping("/{id}")
+	@ApiOperation(value = "Get product by id", response = Product.class)
 	public ResponseEntity<Product> getProduct(@PathVariable("id") int id) {
 		LOG.info("Buscando producto {}", id);
 		Optional<Product> product = this.productService.getProductById(id);
@@ -44,6 +47,7 @@ public class ProductController {
 	}
 
 	@PostMapping("")
+	@ApiOperation(value = "Add a product", response = Product.class)
 	public ResponseEntity<Product> addProduct(@RequestBody Product p) {
 		boolean ok = this.productService.addProduct(p);
 		if (!ok) {
@@ -53,6 +57,7 @@ public class ProductController {
 	}
 
 	@DeleteMapping("/{id}")
+	@ApiOperation(value = "Delete a product by id", response = Product.class)
 	public ResponseEntity<Product> delete(@PathVariable("id") int id) {
 		boolean ok = this.productService.deleteById(id);
 		if (!ok) {
@@ -60,9 +65,10 @@ public class ProductController {
 		}
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
-	
+
 	@PutMapping("")
-	public ResponseEntity<Product> updateProduct(@RequestBody Product p){
+	@ApiOperation(value = "Update a product", response = Product.class)
+	public ResponseEntity<Product> updateProduct(@RequestBody Product p) {
 		Optional<Product> productDb = this.productService.getProductById(p.getId());
 		if (!productDb.isPresent()) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
