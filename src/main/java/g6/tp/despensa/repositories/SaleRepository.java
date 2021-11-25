@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 
 import g6.tp.despensa.entities.Sale;
 
+//El repositorio contiene la logica necesaria para traer la info desde la base de datos
+
 public interface SaleRepository extends JpaRepository<Sale, Integer> {
 
 	@Query("SELECT s FROM Sale s WHERE s.date=:date")

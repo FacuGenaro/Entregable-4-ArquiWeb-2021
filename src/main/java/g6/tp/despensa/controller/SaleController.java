@@ -1,7 +1,6 @@
 package g6.tp.despensa.controller;
 
 import java.sql.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -28,6 +27,9 @@ import g6.tp.despensa.model.ClientReportItem;
 import g6.tp.despensa.model.MostSold;
 import g6.tp.despensa.services.ClientService;
 import g6.tp.despensa.services.SaleService;
+import io.swagger.annotations.ApiOperation;
+
+//Esta clase se encarga de setear los endpoints para las ventas y de hacer las llamadas al servicio cuando sea correspondiente
 
 @RestController
 @RequestMapping("/sale")
@@ -40,12 +42,16 @@ public class SaleController {
 	@Autowired
 	private ClientService clientService;
 
+	//Este metodo trae todas las ventas que haya en la base de datos
 	@GetMapping("")
+	@ApiOperation(value = "Get all sales", response = List.class)
 	public List<Sale> getAll() {
 		return this.saleService.getSales();
 	}
 
+	//Dado un ID este metodo trae las ventas relacionadas a dicho ID
 	@GetMapping("/{id}")
+	@ApiOperation(value = "Get sale by id", response = Product.class)
 	public ResponseEntity<Sale> getSale(@PathVariable("id") int id) {
 		LOG.info("Buscando venta {}", id);
 		Optional<Sale> sale = this.saleService.getSaleById(id);
@@ -55,7 +61,9 @@ public class SaleController {
 		return new ResponseEntity<>(sale.get(), HttpStatus.OK);
 	}
 
+	//Este método recibe un Json con los datos de una nueva venta y lo agrega a la base de datos mediante el Servicio
 	@PostMapping("")
+	@ApiOperation(value = "Add a sale", response = Product.class)
 	public ResponseEntity<Sale> addSale(@RequestBody Sale s) {
 		boolean ok = this.saleService.addSale(s);
 		if (!ok) {
@@ -64,7 +72,9 @@ public class SaleController {
 		return new ResponseEntity<Sale>(s, HttpStatus.OK);
 	}
 
+	//Este metodo recibe un ID y elimina la venta que posea dicho ID
 	@DeleteMapping("/{id}")
+	@ApiOperation(value = "Delete a sale by id", response = Product.class)
 	public ResponseEntity<Sale> delete(@PathVariable("id") int id) {
 		boolean ok = this.saleService.deleteById(id);
 		if (!ok) {
@@ -73,8 +83,9 @@ public class SaleController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	// Solo toma en cuenta el id del cliente y el producto para actualizar la sale
+	// Este metodo recibe un Json y en base al ID que traiga dicho Json se encarga de actualizar la información en la base de datos
 	@PutMapping("")
+	@ApiOperation(value = "Update a sale", response = Product.class)
 	public ResponseEntity<Sale> updateSale(@RequestBody Sale s) {
 		Optional<Sale> saleDb = this.saleService.getSaleById(s.getId());
 		if (!saleDb.isPresent()) {
@@ -86,9 +97,9 @@ public class SaleController {
 		return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 	}
 
-	// 3) Genere un reporte donde se indiquen los clientes y el monto total de sus
-	// compras
+	//Inciso 3 - Este metodo devuelve todos los clientes con el monto total que gastaron
 	@GetMapping("/clientReport")
+	@ApiOperation(value = "Get client report", response = Product.class)
 	public ResponseEntity<List<ClientReportItem>> getClientReport() {
 		List<Client> c = clientService.getClients();
 		if (c.isEmpty()) {
@@ -98,36 +109,20 @@ public class SaleController {
 		return new ResponseEntity<>(responseList, HttpStatus.OK);
 	}
 
-	// 4) Genere un reporte con las ventas por día
+	//Inciso 4 - Este metodo trae todas las compras que se hicieron en cada día almacenado en la base de datos
 	@GetMapping("/dailyReport")
+	@ApiOperation(value = "Get daily report", response = Product.class)
 	public ResponseEntity<Map<Date, Set<Sale>>> getDailyReport() {
 		Map<Date, Set<Sale>> responseMap = this.saleService.getDailyReport();
 		return new ResponseEntity<>(responseMap, HttpStatus.OK);
 	}
 
-	// 5) Implemente una consulta para saber cúal fue el producto más vendido
+	//Inciso 5 - Este metodo trae el producto más vendido
 	@GetMapping("/mostSold")
+	@ApiOperation(value = "Get most sold", response = Product.class)
 	public ResponseEntity<MostSold> getMostSold() {
 		MostSold mostSold = saleService.getMostSold();
 		return new ResponseEntity<>(mostSold, HttpStatus.OK);
 	}
 
-	@GetMapping("/byClient/{client_id}")
-	public ResponseEntity<Map<String, String>> getByClient(@PathVariable("client_id") int client_id) {
-		Optional<Client> c = clientService.getClientById(client_id);
-		if (c.isEmpty()) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-		Set<Sale> clientSales = saleService.getSalesByClient(c.get());
-		Map<String, String> responseMap = new HashMap<>();
-		double d = 0;
-		for (Sale sale : clientSales) {
-			responseMap.put("name", sale.getClient().getName());
-			for (Product p : sale.getProducts()) {
-				d += p.getPrice();
-			}
-		}
-		responseMap.put("total", String.valueOf(d));
-		return new ResponseEntity<>(responseMap, HttpStatus.OK);
-	}
 }

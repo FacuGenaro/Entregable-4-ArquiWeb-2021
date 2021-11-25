@@ -21,6 +21,8 @@ import g6.tp.despensa.entities.Product;
 import g6.tp.despensa.services.ProductService;
 import io.swagger.annotations.ApiOperation;
 
+//Esta clase se encarga de setear los endpoints para los Productos y de hacer las llamadas al servicio cuando sea correspondiente
+
 @RestController
 @RequestMapping("/product")
 public class ProductController {
@@ -29,12 +31,14 @@ public class ProductController {
 	@Autowired
 	private ProductService productService;
 
+	//Este metodo devuelve todos los productos de la base de datos
 	@ApiOperation(value = "Get all products", response = List.class)
 	@GetMapping("")
 	public List<Product> getAll() {
 		return this.productService.getProducts();
 	}
 
+	//Dado un ID de producto, este metodo devuelve toda la info de dicho producto
 	@GetMapping("/{id}")
 	@ApiOperation(value = "Get product by id", response = Product.class)
 	public ResponseEntity<Product> getProduct(@PathVariable("id") int id) {
@@ -46,6 +50,7 @@ public class ProductController {
 		return new ResponseEntity<>(product.get(), HttpStatus.OK);
 	}
 
+	//Dado un Json con la info de un nuevo producto, este metodo se comunica con el servicio para insertarlo en la base de datos
 	@PostMapping("")
 	@ApiOperation(value = "Add a product", response = Product.class)
 	public ResponseEntity<Product> addProduct(@RequestBody Product p) {
@@ -56,6 +61,7 @@ public class ProductController {
 		return new ResponseEntity<Product>(p, HttpStatus.OK);
 	}
 
+	//Dado un ID de producto, este metodo se comunica con el servicio para eliminarlo de la base de datos	
 	@DeleteMapping("/{id}")
 	@ApiOperation(value = "Delete a product by id", response = Product.class)
 	public ResponseEntity<Product> delete(@PathVariable("id") int id) {
@@ -66,6 +72,7 @@ public class ProductController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
+	//Dado un Json con info para actualizar un producto, este metodo se comunica con el servicio para actualizar esa información	
 	@PutMapping("")
 	@ApiOperation(value = "Update a product", response = Product.class)
 	public ResponseEntity<Product> updateProduct(@RequestBody Product p) {

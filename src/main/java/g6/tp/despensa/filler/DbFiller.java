@@ -22,6 +22,8 @@ import g6.tp.despensa.services.SaleService;
 @Configuration
 public class DbFiller {
 
+//Esta clase se usa para llenar la base de con info al azar
+	
 	@Bean
 	public CommandLineRunner initDb(ClientRepository client, ProductRepository product, SaleService sale) {
 		return args -> {
