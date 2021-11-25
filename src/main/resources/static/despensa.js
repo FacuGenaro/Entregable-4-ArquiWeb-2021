@@ -3,10 +3,9 @@ document.addEventListener("DOMContentLoaded", initScript);
 
 
 function initScript() {
-    const url = "http://localhost:8080";
-    const item3Endpoint = "/sale/clientReport";
-    const item4Endpoint = "/sale/dailyReport";
-    const item5Endpoint = "/sale/mostSold";
+    const item3Endpoint = "./sale/clientReport";
+    const item4Endpoint = "./sale/dailyReport";
+    const item5Endpoint = "./sale/mostSold";
     let item3Btn = document.querySelector("#consigna3");
     let item4Btn = document.querySelector("#consigna4");
     let item5Btn = document.querySelector("#consigna5");
@@ -21,7 +20,7 @@ function initScript() {
     }
 
     function getClientsReport() {
-        fetch(url + item3Endpoint)
+        fetch(item3Endpoint)
             .then(response => response.json())
             .then(clientReportItems => {
                 content.innerHTML = "<h2>Reporte de Ventas por Cliente<h2/> <br/>";
@@ -33,7 +32,7 @@ function initScript() {
     }
 
     function getDailyReport() {
-        fetch(url + item4Endpoint)
+        fetch(item4Endpoint)
             .then(response => response.json())
             .then(dailyReportMap => {
                 content.innerHTML = "<h2>Reporte de Ventas Diario<h2/> <br/>";
@@ -59,7 +58,7 @@ function initScript() {
     }
 
     function getMostSoldProduct() {
-        fetch(url + item5Endpoint)
+        fetch(item5Endpoint)
             .then(response => response.json())
             .then(mostSold => {
                 content.innerHTML = "<h2>Producto Mas Vendido<h2/>" + "<br/>"
