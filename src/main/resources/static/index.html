@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,20 +8,61 @@
     <title>OnlineShop</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <div class="container">
         <header>
             <h1>Despensa Online</h1>
             <nav>
+                <div class="menu-item" id="productos">productos</div>
+                <div class="menu-item" id="clientes">clientes</div>
+                <div class="menu-item" id="ventas">ventas</div>
                 <div class="menu-item" id="consigna3">Consigna 3</div>
                 <div class="menu-item" id="consigna4">Consigna 4</div>
                 <div class="menu-item" id="consigna5">Consigna 5</div>
             </nav>
         </header>
+        <h2>Agregar un Cliente</h2>
+        <form>
+            <label for="nombre">Nombre</label>
+            <input type="text" name="nombre" id="client-name">
+            <input type="button" value="Enviar" id="client-submit">
+        </form>
+        <hr>
 
-    <div class="content"></div>
+        <h2>Agregar un Producto</h2>
+        <form>
+            <label for="nombre">Nombre</label>
+            <input type="text" name="nombre" id="product-name">
+            <label for="precio">Valor</label>
+            <input type="number" name="precio" id="price">
+            <input type="button" value="Enviar" id="product-submit">
+        </form>
+        <hr>
+
+        <h2>Agregar una Venta</h2>
+        <form>
+            <label for="fecha">Fecha</label>
+            <input type="date" name="fecha" id="date">
+            <label for="cliente">Cliente</label>
+            <select name="cliente" id="client">
+                <option value="-1" selected>Seleccione un cliente</option>
+            </select>
+            <br>
+            <label for="productos">Productos</label>
+            <select name="producto" id="product">
+                <option value="-1" selected>Seleccione un producto</option>
+            </select>
+            <input type="button" value="Agregar" id="add-product">
+            <br>
+            <input type="button" value="Enviar" id="sale-submit">
+        </form>
+        <hr>
+
+        <div class="content"></div>
         <footer>Arquitecturas Web 2021 - Entregable N4 - Genaro, Fuhr, Barthes - Sede de Tandil</footer>
     </div>
     <script src="despensa.js"></script>
 </body>
+
 </html>
