@@ -9,12 +9,12 @@ function initScript() {
     const item3Endpoint = "./sale/clientReport";
     const item4Endpoint = "./sale/dailyReport";
     const item5Endpoint = "./sale/mostSold";
-    let productsBtn = document.querySelector("#productos");
-    let clientsBtn = document.querySelector("#clientes");
-    let salesBtn = document.querySelector("#ventas");
-    let item3Btn = document.querySelector("#consigna3");
-    let item4Btn = document.querySelector("#consigna4");
-    let item5Btn = document.querySelector("#consigna5");
+    let productsBtn = document.querySelector("#Productos");
+    let clientsBtn = document.querySelector("#Clientes");
+    let salesBtn = document.querySelector("#Ventas");
+    let item3Btn = document.querySelector("#Consigna3");
+    let item4Btn = document.querySelector("#Consigna4");
+    let item5Btn = document.querySelector("#Consigna5");
     let content = document.querySelector(".content");
     //Botones para los forms POST
     let clientSubmit = document.querySelector("#client-submit");
@@ -152,7 +152,8 @@ function initScript() {
     function updateProduct() {
         var data = {
             "id": updateProductSelect.value,
-            "name": document.querySelector("#new-product-name").value
+            "name": document.querySelector("#new-product-name").value,
+            "price": parseInt(document.querySelector("#new-product-price").value)
         };
         console.log(data);
 
@@ -378,7 +379,7 @@ function initScript() {
             .then(mostSold => {
                 content.innerHTML = "<h2>Producto Mas Vendido<h2/>" + "<br/>" +
                     "Nombre: " + mostSold.productName + "<br/>" +
-                    "Total Recaudado: $" + mostSold.quantity + "<hr/>";
+                    "Unidades vendidas: " + mostSold.quantity + "<hr/>";
             })
             .catch(e => console.log(e))
     }

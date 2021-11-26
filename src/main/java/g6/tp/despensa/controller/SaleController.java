@@ -124,5 +124,6 @@ public class SaleController {
 		MostSold mostSold = saleService.getMostSold();
 		return new ResponseEntity<>(mostSold, HttpStatus.OK);
 	}
+	
 
 }

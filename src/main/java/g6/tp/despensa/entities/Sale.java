@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
+
 @Entity
 public class Sale {
 
@@ -88,4 +89,5 @@ public class Sale {
 	public int hashCode() {
 		return Integer.hashCode(id);
 	}
+
 }
